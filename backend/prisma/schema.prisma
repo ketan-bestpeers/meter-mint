@@ -13,8 +13,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+model Organization {
+  id        String       @id @default(uuid())
+  name      String
+  apiKey    String       @unique
+  planId    String
+  plan      Plan         @relation(fields: [planId], references: [id])
+  events    UsageEvent[]
+  aggregates Aggregate[]
+  createdAt DateTime     @default(now())
+}
+
+model Plan {
+  id               String         @id @default(uuid())
+  name             String         // "Free", "Pro"
+  includedQuantity Int            // 100 or 1000
+  allowOverage     Boolean        // false for Free, true for Pro
+  overagePrice     Float          // 0.00 or 0.02
+  basePrice        Float          // 0.00 or 20.00
+  organizations    Organization[]
+}
+
+model Meter {
+  id         String      @id @default(uuid())
+  name       String      @unique // e.g., "api_calls"
+  aggregates Aggregate[]
+}
+
+model UsageEvent {
+  id             String       @id @default(uuid())
+  eventId        String       // Client-supplied deduplication ID
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  meterName      String
+  quantity       Int
+  timestamp      DateTime
+  processedAt    DateTime     @default(now())
+
+  @@unique([organizationId, eventId])
+}
+
+model Aggregate {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  meterId        String
+  meter          Meter        @relation(fields: [meterId], references: [id])
+  periodStart    DateTime
+  periodEnd      DateTime
+  totalQuantity  Int          @default(0)
+
+  @@unique([organizationId, meterId, periodStart, periodEnd])
 }
