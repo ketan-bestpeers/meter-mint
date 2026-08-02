@@ -1,5 +1,8 @@
 FROM node:20-alpine
 
+# Install postgresql and redis
+RUN apk add --no-cache postgresql postgresql-contrib redis
+
 WORKDIR /app
 
 # Copy package configuration files from backend
