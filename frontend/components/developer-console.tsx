@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CodeConsole } from '@/components/ui/code-console';
 import { Zap, RefreshCw, Layers, Play, Copy } from 'lucide-react';
+import { BASE_URL } from '@/lib/api-client';
 
 export function DeveloperConsole() {
   const { apiKey, refresh } = useTenant();
@@ -54,7 +55,7 @@ export function DeveloperConsole() {
 
     const start = performance.now();
     try {
-      const response = await fetch('http://localhost:4000/api/v1/events', {
+      const response = await fetch(`${BASE_URL.replace(/\/$/, '')}/v1/events`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ export function DeveloperConsole() {
 
         const start = performance.now();
         try {
-          const response = await fetch('http://localhost:4000/api/v1/events', {
+          const response = await fetch(`${BASE_URL.replace(/\/$/, '')}/v1/events`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

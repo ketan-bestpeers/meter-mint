@@ -1,14 +1,28 @@
 #!/bin/sh
 set -e
 
-# Check if external PostgreSQL server is available (e.g. in local docker-compose environment)
+# Check if external PostgreSQL server is available
 HAS_EXTERNAL_DB=0
 if nc -z postgres 5432 2>/dev/null; then
   HAS_EXTERNAL_DB=1
+  echo "Found external PostgreSQL database (postgres:5432)."
+elif [ -n "$DATABASE_URL" ]; then
+  # Extract host and port from DATABASE_URL
+  DB_HOST_PORT=$(echo "$DATABASE_URL" | sed -e 's|^.*://||' -e 's|/.*$||' -e 's|^.*@||')
+  DB_HOST=$(echo "$DB_HOST_PORT" | cut -d: -f1)
+  DB_PORT=$(echo "$DB_HOST_PORT" | cut -d: -f2)
+  if [ "$DB_PORT" = "$DB_HOST" ]; then
+    DB_PORT=5432
+  fi
+  echo "Checking connection to database at $DB_HOST:$DB_PORT..."
+  if nc -z "$DB_HOST" "$DB_PORT" 2>/dev/null; then
+    HAS_EXTERNAL_DB=1
+    echo "Found external database at $DB_HOST:$DB_PORT"
+  fi
 fi
 
 if [ "$HAS_EXTERNAL_DB" -eq 1 ]; then
-  echo "Found external PostgreSQL database (postgres:5432). Using external database and Redis."
+  echo "Using external database and Redis."
 else
   echo "No external PostgreSQL service found. Starting local Redis and Postgres..."
 

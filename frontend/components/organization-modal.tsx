@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useTenant } from '@/lib/tenant-context';
 import { Button } from '@/components/ui/button';
 import { X, CheckCircle, Copy, Layers, Server, ShieldCheck } from 'lucide-react';
+import { BASE_URL } from '@/lib/api-client';
 
 interface Plan {
   id: string;
@@ -44,7 +45,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
     setErrorMsg(null);
     setLoadingPlans(true);
 
-    fetch('http://localhost:4000/api/organizations/plans')
+    fetch(`${BASE_URL.replace(/\/$/, '')}/organizations/plans`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to load plans');
         return res.json();
@@ -80,7 +81,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
     setErrorMsg(null);
 
     try {
-      const res = await fetch('http://localhost:4000/api/organizations', {
+      const res = await fetch(`${BASE_URL.replace(/\/$/, '')}/organizations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
