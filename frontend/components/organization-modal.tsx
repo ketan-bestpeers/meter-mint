@@ -27,7 +27,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
   const [selectedPlanId, setSelectedPlanId] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  
+
   // Success state holds the newly generated organization information
   const [createdOrg, setCreatedOrg] = useState<{ name: string; apiKey: string } | null>(null);
   const [copied, setCopied] = useState(false);
@@ -35,7 +35,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
   // Fetch plans dynamically from database
   useEffect(() => {
     if (!isOpen) return;
-    
+
     // Reset state on open
     setOrgName('');
     setSelectedPlanId('');
@@ -124,15 +124,15 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-xl bg-card border-4 border-foreground text-foreground rounded-lg shadow-[8px_8px_0px_#000] dark:shadow-none p-6 md:p-8 animate-in fade-in zoom-in-95 duration-150">
-        
+      <div className="relative w-full max-w-xl bg-card border-2 border-foreground text-foreground rounded-lg shadow-[8px_8px_0px_#000] dark:shadow-none p-6 md:p-8 animate-in fade-in zoom-in-95 duration-150">
+
         {/* Header */}
         <div className="flex items-center justify-between border-b-4 border-foreground pb-4 mb-6">
           <div className="flex items-center gap-2">
             <Layers className="text-primary" size={24} />
             <h3 className="text-xl font-extrabold">Subscribe New Organization</h3>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="p-1 rounded border-2 border-foreground hover:bg-muted/30"
           >
@@ -149,7 +149,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
         {createdOrg ? (
           /* Success Screen */
           <div className="flex flex-col gap-5 text-center items-center py-4">
-            <div className="h-16 w-16 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center border-4 border-foreground shadow-[2px_2px_0px_#000] dark:shadow-none mb-2">
+            <div className="h-16 w-16 bg-emerald-100 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center border-2 border-foreground shadow-[2px_2px_0px_#000] dark:shadow-none mb-2">
               <ShieldCheck size={36} />
             </div>
 
@@ -183,7 +183,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
             <Button
               onClick={onClose}
               variant="default"
-              className="w-full border-4 border-foreground mt-2 font-mono font-bold"
+              className="w-full border-2 border-foreground mt-2 font-mono font-bold"
             >
               Close & Switch
             </Button>
@@ -191,7 +191,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
         ) : (
           /* Form Screen */
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-            
+
             {/* Org Name */}
             <div className="flex flex-col gap-1.5 font-mono text-xs">
               <label className="font-bold text-muted-foreground uppercase">Organization Name</label>
@@ -209,7 +209,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
             {/* Plan selection */}
             <div className="flex flex-col gap-2 font-mono text-xs">
               <label className="font-bold text-muted-foreground uppercase">Select Subscription Plan</label>
-              
+
               {loadingPlans ? (
                 <div className="text-center py-8 font-bold text-muted-foreground">
                   Loading plan configurations...
@@ -224,11 +224,10 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
                         type="button"
                         onClick={() => setSelectedPlanId(p.id)}
                         disabled={submitting}
-                        className={`text-left p-4 rounded border-2 transition-all duration-150 flex flex-col justify-between ${
-                          isSelected 
-                            ? 'border-primary bg-primary/5 shadow-[3px_3px_0px_#000] dark:shadow-none' 
+                        className={`text-left p-4 rounded border-2 transition-all duration-150 flex flex-col justify-between ${isSelected
+                            ? 'border-primary bg-primary/5 shadow-[3px_3px_0px_#000] dark:shadow-none'
                             : 'border-foreground hover:bg-muted/30'
-                        }`}
+                          }`}
                       >
                         <div>
                           <div className="flex items-center justify-between border-b border-foreground pb-1.5 mb-2.5">
@@ -265,7 +264,7 @@ export function OrganizationModal({ isOpen, onClose }: OrganizationModalProps) {
                 variant="default"
                 disabled={submitting || loadingPlans}
                 isLoading={submitting}
-                className="w-2/3 border-4 border-foreground font-mono"
+                className="w-2/3 border-2 border-foreground font-mono"
                 leftIcon={<Server size={14} />}
               >
                 Create & Subscribe

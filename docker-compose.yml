@@ -23,6 +23,23 @@ services:
     volumes:
       - redis_data:/data
 
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: metermint-backend
+    restart: always
+    ports:
+      - '4000:4000'
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/metermint_db?schema=public
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PORT=4000
+    depends_on:
+      - postgres
+      - redis
+
 volumes:
   postgres_data:
   redis_data:

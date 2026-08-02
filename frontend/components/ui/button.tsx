@@ -10,8 +10,8 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-white hover:bg-primary-hover hover:scale-105 border-0",
         secondary: "bg-muted text-foreground hover:bg-muted-hover hover:scale-105 border-0",
-        outline: "border-4 border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-white hover:scale-105",
-        whiteOutline: "border-4 border-white bg-transparent text-white hover:bg-white hover:text-primary hover:scale-105",
+        outline: "border-2 border-foreground bg-transparent text-foreground hover:bg-foreground hover:text-background hover:scale-105",
+        whiteOutline: "border-2 border-white bg-transparent text-white hover:bg-white hover:text-primary hover:scale-105",
         destructive: "bg-red-600 text-white hover:bg-red-700 hover:scale-105 border-0",
         ghost: "bg-transparent text-foreground hover:bg-muted hover:scale-105 border-0",
         link: "text-primary underline-offset-4 hover:underline border-0",
@@ -33,7 +33,7 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  VariantProps<typeof buttonVariants> {
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;

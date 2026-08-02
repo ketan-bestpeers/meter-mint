@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: ["class", '[data-theme="dark"]'],
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -36,28 +37,6 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-outfit)", "sans-serif"],
-      },
-      borderRadius: {
-        DEFAULT: "8px",
-        sm: "6px",
-        md: "12px",
-        lg: "16px",
-        xl: "20px",
-        "2xl": "24px",
-      },
-      borderWidth: {
-        "4": "2px",
-        "2": "1px",
-      },
-      boxShadow: {
-        sm: "none",
-        DEFAULT: "none",
-        md: "none",
-        lg: "none",
-        xl: "none",
-        "2xl": "none",
-        inner: "none",
-        none: "none",
       },
     },
   },

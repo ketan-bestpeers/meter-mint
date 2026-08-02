@@ -3,6 +3,8 @@
 import React from 'react';
 import { useTenant } from '@/lib/tenant-context';
 import { Card } from '@/components/ui/card';
+import { ProgressBar } from '@/components/ui/progress-bar';
+import { Tag } from '@/components/ui/tag';
 import { Activity, AlertTriangle, ShieldAlert, CheckCircle } from 'lucide-react';
 
 export function UsageOverview() {
@@ -10,7 +12,7 @@ export function UsageOverview() {
 
   if (loading && !usageInfo) {
     return (
-      <Card className="bg-card border-4 border-foreground text-foreground p-6 md:p-8 rounded-lg shadow-[4px_4px_0px_#000] dark:shadow-none">
+      <Card className="bg-card border-2 border-foreground text-foreground p-6 md:p-8 rounded-lg">
         <div className="flex items-center justify-between border-b-2 border-foreground pb-4 mb-6">
           <div className="flex items-center gap-2">
             <Activity className="text-primary animate-spin" size={24} strokeWidth={2.5} />
@@ -30,18 +32,18 @@ export function UsageOverview() {
 
   // Determine Quota Status
   let statusText = 'Within Quota';
-  let badgeColor = 'bg-emerald-100 text-emerald-800 border-emerald-900 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-700';
-  let statusIcon = <CheckCircle className="text-emerald-500" size={16} />;
+  let tagVariant: 'success' | 'warning' | 'error' = 'success';
+  let statusIcon = <CheckCircle className="text-emerald-600 dark:text-emerald-400" size={16} />;
 
   if (currentUsage >= limit) {
     if (allowOverage) {
       statusText = 'Overage Accruing';
-      badgeColor = 'bg-amber-100 text-amber-800 border-amber-900 dark:bg-amber-950 dark:text-amber-300 dark:border-amber-700';
-      statusIcon = <AlertTriangle className="text-amber-500 animate-pulse" size={16} />;
+      tagVariant = 'warning';
+      statusIcon = <AlertTriangle className="text-amber-600 dark:text-amber-400 animate-pulse" size={16} />;
     } else {
       statusText = 'Hard Cap Reached';
-      badgeColor = 'bg-red-100 text-red-800 border-red-900 dark:bg-red-950 dark:text-red-300 dark:border-red-700';
-      statusIcon = <ShieldAlert className="text-red-500 animate-bounce" size={16} />;
+      tagVariant = 'error';
+      statusIcon = <ShieldAlert className="text-red-600 dark:text-red-400 animate-bounce" size={16} />;
     }
   }
 
@@ -53,18 +55,28 @@ export function UsageOverview() {
   const calculatedOverage = overageUnits * overagePrice;
   const estTotalCost = basePrice + calculatedOverage;
 
+  const getProgressBarColor = () => {
+    if (currentUsage >= limit) {
+      return allowOverage ? '#f59e0b' : '#ef4444'; // amber-500 or red-500
+    }
+    if (usagePercent >= 80) {
+      return '#fbbf24'; // amber-400
+    }
+    return '#10b981'; // emerald-500 / secondary
+  };
+
   return (
-    <Card className="bg-card border-4 border-foreground text-foreground p-6 md:p-8 rounded-lg shadow-[4px_4px_0px_#000] dark:shadow-none flex flex-col justify-between h-full">
+    <Card className="bg-card border-2 border-foreground text-foreground p-6 md:p-8 rounded-xl flex flex-col justify-between h-full">
       <div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-foreground pb-4 mb-6 gap-2.5">
           <div className="flex items-center gap-2">
             <Activity className="text-primary" size={24} strokeWidth={2.5} />
             <h3 className="text-xl font-extrabold">Usage Overview</h3>
           </div>
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border-2 font-bold text-xs shadow-[2px_2px_0px_#000] dark:shadow-none self-start sm:self-center ${badgeColor}`}>
+          <Tag variant={tagVariant} className="self-start sm:self-center">
             {statusIcon}
             <span>{statusText.toUpperCase()}</span>
-          </div>
+          </Tag>
         </div>
 
         {/* Progress bar and numeric usage */}
@@ -75,20 +87,9 @@ export function UsageOverview() {
               {currentUsage} <span className="text-lg font-medium text-muted-foreground">/ {limit}</span>
             </span>
           </div>
-          
-          {/* Custom progress bar */}
-          <div className="h-6 w-full bg-muted rounded-full border-2 border-foreground overflow-hidden p-0.5">
-            <div 
-              className={`h-full rounded-full transition-all duration-500 ease-out border-r-2 border-foreground ${
-                currentUsage >= limit 
-                  ? allowOverage ? 'bg-amber-500' : 'bg-red-500' 
-                  : usagePercent >= 80 
-                  ? 'bg-amber-400' 
-                  : 'bg-secondary'
-              }`}
-              style={{ width: `${usagePercent}%` }}
-            />
-          </div>
+
+          {/* Common progress bar component */}
+          <ProgressBar value={usagePercent} color={getProgressBarColor()} />
 
           <div className="flex justify-between text-xs font-bold font-mono text-muted-foreground">
             <span>0%</span>
@@ -126,7 +127,7 @@ export function UsageOverview() {
       </div>
 
       {/* Estimate Bill Calculation Preview */}
-      <div className="mt-8 border-t-2 border-foreground pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-muted/20 p-4 rounded-lg border-2 border-dashed border-border">
+      <div className="mt-8 border-t-2 border-foreground flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-muted/20 py-2.5 px-4 rounded-lg border-2 border-dashed border-border">
         <div>
           <h4 className="text-sm font-bold text-muted-foreground uppercase font-mono">Estimated Billing Volume</h4>
           <p className="text-xs text-muted-foreground mt-0.5">Calculated dynamically based on base + overages</p>

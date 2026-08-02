@@ -50,3 +50,30 @@
   }
 }
 
+/* Custom Progress Bar (Loader) style */
+.loader-custom {
+  height: 22px;
+  border-radius: 20px;
+  border: 2px solid;
+  position: relative;
+  width: 100%;
+}
+.loader-custom::before {
+  content: "";
+  position: absolute;
+  margin: 2px;
+  inset: 0 var(--progress-inset, 100%) 0 0;
+  border-radius: inherit;
+  background: currentColor;
+  transition: inset 0.5s ease-out;
+}
+.loader-custom-animated::before {
+  animation: l6 2s infinite;
+}
+@keyframes l6 {
+  100% {
+    inset: 0;
+  }
+}
+
+

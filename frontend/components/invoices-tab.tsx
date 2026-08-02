@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useTenant, Invoice } from '@/lib/tenant-context';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Select } from '@/components/ui/select';
+import { Tag } from '@/components/ui/tag';
 import { FileText, Calendar, DollarSign, CheckCircle2, RefreshCw, Layers } from 'lucide-react';
 
 const PERIODS = [
@@ -70,11 +72,21 @@ export function InvoicesTab() {
     return tenantInfo?.plan?.includedQuantity || 0;
   };
 
+  const getPeriodDisplayName = (name: string) => {
+    if (name.includes('(Current)')) return name;
+    return name.replace(/\s*\([^)]*\)/g, '').trim();
+  };
+
+  const periodOptions = PERIODS.map(p => ({
+    value: p.name,
+    label: getPeriodDisplayName(p.name),
+  }));
+
   return (
     <div className="flex flex-col gap-6">
-      
+
       {/* Top action panel: Invoicing Period Selection and Trigger */}
-      <Card className="bg-card border-4 border-foreground text-foreground p-6 rounded-lg shadow-[4px_4px_0px_#000] dark:shadow-none">
+      <Card className="bg-card border-2 border-foreground text-foreground p-6 rounded-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
             <span className="text-xs font-bold text-primary font-mono uppercase tracking-wider">Billing Control Center</span>
@@ -85,18 +97,15 @@ export function InvoicesTab() {
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold font-mono text-muted-foreground uppercase">Target Period:</span>
-              <select
-                className="bg-background text-foreground font-semibold text-xs border-2 border-foreground px-2.5 py-1.5 rounded focus:outline-none cursor-pointer"
+              <Select
+                options={periodOptions}
                 value={selectedPeriod.name}
                 onChange={(e) => {
                   const p = PERIODS.find(x => x.name === e.target.value);
                   if (p) setSelectedPeriod(p);
                 }}
-              >
-                {PERIODS.map(p => (
-                  <option key={p.name} value={p.name}>{p.name}</option>
-                ))}
-              </select>
+                className="text-xs py-1.5"
+              />
             </div>
 
             <Button
@@ -114,11 +123,10 @@ export function InvoicesTab() {
         </div>
 
         {msg && (
-          <div className={`mt-4 p-3 rounded border text-xs font-mono break-all ${
-            msg.startsWith('Error') 
-              ? 'bg-red-500/10 border-red-500 text-red-600 dark:text-red-400' 
-              : 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400'
-          }`}>
+          <div className={`mt-4 p-3 rounded border-2 text-xs font-mono break-all transition-colors duration-200 ${msg.startsWith('Error')
+            ? 'bg-red-50 border-red-300 text-red-800 dark:bg-red-950/30 dark:border-red-800 dark:text-red-300'
+            : 'bg-emerald-50 border-emerald-300 text-emerald-800 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-300'
+            }`}>
             {msg}
           </div>
         )}
@@ -126,13 +134,14 @@ export function InvoicesTab() {
 
       {/* Main split tab layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+
         {/* Left column: List of Invoices */}
         <div className="lg:col-span-1 flex flex-col gap-4">
           <div className="flex items-center justify-between border-b-2 border-foreground pb-2.5">
             <h4 className="text-sm font-extrabold font-mono uppercase tracking-wider">Invoice History ({invoices.length})</h4>
-            <button 
-              onClick={() => refresh()} 
+            <button
+              type="button"
+              onClick={() => refresh()}
               className="text-[10px] font-bold text-primary font-mono flex items-center gap-1 hover:underline"
             >
               <RefreshCw size={10} /> Reload
@@ -151,11 +160,10 @@ export function InvoicesTab() {
                   <button
                     key={inv.id}
                     onClick={() => setSelectedInvoiceId(inv.id)}
-                    className={`text-left p-4 rounded border-2 transition-all duration-200 ${
-                      isSelected 
-                        ? 'border-primary bg-primary/5 shadow-[2px_2px_0px_#000] dark:shadow-none' 
-                        : 'border-foreground hover:bg-muted/30'
-                    }`}
+                    className={`text-left p-4 rounded border-2 transition-all duration-200 ${isSelected
+                      ? 'border-primary bg-primary/5 shadow-[2px_2px_0px_#000] dark:shadow-none'
+                      : 'border-foreground hover:bg-muted/30'
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-mono font-bold text-xs">#{inv.id.substring(0, 8)}</span>
@@ -175,7 +183,7 @@ export function InvoicesTab() {
         {/* Right column: Gorgeous Breakdown Card detail */}
         <div className="lg:col-span-2">
           {selectedInvoice ? (
-            <Card className="bg-card border-4 border-foreground text-foreground p-6 md:p-8 rounded-lg shadow-[4px_4px_0px_#000] dark:shadow-none flex flex-col justify-between h-full">
+            <Card className="bg-card border-2 border-foreground text-foreground p-6 md:p-8 rounded-lg flex flex-col justify-between h-full">
               <div>
                 {/* Header: Plan & dates */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-foreground pb-4 mb-6 gap-2">
@@ -183,10 +191,10 @@ export function InvoicesTab() {
                     <span className="text-xs font-bold text-primary font-mono uppercase tracking-wider">Itemized Breakdown</span>
                     <h3 className="text-xl font-extrabold mt-0.5">{getPlanName(selectedInvoice)}</h3>
                   </div>
-                  <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border-2 border-foreground bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 font-bold text-xs shadow-[2px_2px_0px_#000] dark:shadow-none font-sans">
+                  <Tag variant="success" className="font-sans">
                     <CheckCircle2 size={12} />
                     <span>PAID RECORD</span>
-                  </div>
+                  </Tag>
                 </div>
 
                 {/* Period Dates */}
@@ -197,7 +205,7 @@ export function InvoicesTab() {
 
                 {/* Line items details list */}
                 <div className="flex flex-col gap-4 font-mono text-xs">
-                  
+
                   {/* Line Item 1: Base Price */}
                   <div className="flex items-center justify-between border-b border-dashed border-border pb-3">
                     <div className="flex flex-col">
@@ -254,7 +262,7 @@ export function InvoicesTab() {
               </div>
             </Card>
           ) : (
-            <div className="text-center py-24 border-4 border-dashed border-border rounded-lg bg-muted/10 h-full flex flex-col justify-center items-center">
+            <div className="text-center py-24 border-2 border-dashed border-border rounded-lg bg-muted/10 h-full flex flex-col justify-center items-center">
               <FileText className="text-muted-foreground opacity-30 mb-4" size={64} />
               <p className="font-bold text-lg text-muted-foreground">Select an Invoice to View Breakdown</p>
               <p className="text-xs text-muted-foreground mt-1 font-mono">History is loaded from database.</p>

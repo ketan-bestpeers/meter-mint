@@ -7,13 +7,13 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white text-foreground",
+        default: "bg-card text-foreground",
         muted: "bg-muted text-foreground",
         blue: "bg-blue-50 text-foreground hover:bg-blue-100",
         emerald: "bg-emerald-50 text-foreground hover:bg-emerald-100",
         amber: "bg-amber-50 text-foreground hover:bg-amber-100",
         dark: "bg-foreground text-white",
-        darkSlate: "bg-[#1e293b] text-white border-4 border-white",
+        darkSlate: "bg-[#1e293b] text-white border-2 border-white",
       },
     },
     defaultVariants: {
@@ -24,7 +24,7 @@ const cardVariants = cva(
 
 export interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {
+  VariantProps<typeof cardVariants> {
   isLink?: boolean;
 }
 

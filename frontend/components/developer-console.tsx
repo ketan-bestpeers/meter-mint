@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useTenant } from '@/lib/tenant-context';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { CodeConsole } from '@/components/ui/code-console';
 import { Zap, RefreshCw, Layers, Play, Copy } from 'lucide-react';
 
 export function DeveloperConsole() {
@@ -92,7 +93,7 @@ export function DeveloperConsole() {
     await sendSingleEvent(eventId, quantity, 'Custom Event');
     handleGenerateId(); // Auto-rotate key after manual send
     setSending(false);
-    
+
     // Refresh parent page aggregates after brief queue processing delay
     setTimeout(() => {
       refresh();
@@ -108,7 +109,7 @@ export function DeveloperConsole() {
     addLog(`[Deduplication Test] Sending duplicate event using key: ${lastEventId}`);
     await sendSingleEvent(lastEventId, quantity, 'Duplicate Event');
     setSending(false);
-    
+
     setTimeout(() => {
       refresh();
     }, 600);
@@ -164,7 +165,7 @@ export function DeveloperConsole() {
 
       const currentProgress = Math.round(((i + currentBatchSize) / totalEvents) * 100);
       setProgress(currentProgress);
-      
+
       // Calculate running average latency
       const avg = latencies.reduce((s, x) => s + x, 0) / latencies.length;
       setAvgLatency(avg);
@@ -181,7 +182,7 @@ export function DeveloperConsole() {
   };
 
   return (
-    <Card className="bg-card border-4 border-foreground text-foreground p-6 rounded-lg shadow-[4px_4px_0px_#000] dark:shadow-none">
+    <Card className="bg-card border-2 border-foreground text-foreground p-6 rounded-xl">
       <div className="flex items-center justify-between border-b-2 border-foreground pb-4 mb-5">
         <div className="flex items-center gap-2">
           <Zap className="text-accent animate-pulse" size={24} strokeWidth={2.5} />
@@ -194,7 +195,7 @@ export function DeveloperConsole() {
 
       {/* Grid Inputs */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 font-mono text-xs">
-        
+
         {/* Event ID */}
         <div className="flex flex-col gap-1.5 col-span-1 md:col-span-2">
           <label className="font-bold text-muted-foreground uppercase">Event ID (Deduplication Key)</label>
@@ -274,7 +275,7 @@ export function DeveloperConsole() {
             <span>{progress}%</span>
           </div>
           <div className="h-4 w-full bg-muted border-2 border-foreground rounded overflow-hidden p-0.5">
-            <div 
+            <div
               className="h-full bg-primary rounded transition-all duration-300 border-r border-foreground"
               style={{ width: `${progress}%` }}
             />
@@ -307,11 +308,7 @@ export function DeveloperConsole() {
       </div>
 
       {/* Scrollable logs */}
-      <div className="bg-foreground text-white border-2 border-foreground p-4 rounded font-mono text-[10px] max-h-36 overflow-y-auto flex flex-col gap-1 text-emerald-400">
-        {logs.map((log, index) => (
-          <p key={index} className="leading-relaxed whitespace-pre-wrap">{log}</p>
-        ))}
-      </div>
+      <CodeConsole logs={logs} />
     </Card>
   );
 }
