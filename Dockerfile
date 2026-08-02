@@ -2,18 +2,18 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy package configuration files
-COPY package*.json ./
+# Copy package configuration files from backend
+COPY backend/package*.json ./
 
 # Install dependencies (including devDependencies for ts-node/prisma seed)
 RUN npm install
 
 # Copy Prisma schema and generate client
-COPY prisma ./prisma/
+COPY backend/prisma ./prisma/
 RUN npx prisma generate
 
-# Copy remaining source files
-COPY . .
+# Copy remaining backend source files
+COPY backend/ .
 
 # Build NestJS application
 RUN npm run build
