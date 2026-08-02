@@ -21,6 +21,7 @@ model Organization {
   plan      Plan         @relation(fields: [planId], references: [id])
   events    UsageEvent[]
   aggregates Aggregate[]
+  invoices   Invoice[]
   createdAt DateTime     @default(now())
 }
 
@@ -64,4 +65,19 @@ model Aggregate {
   totalQuantity  Int          @default(0)
 
   @@unique([organizationId, meterId, periodStart, periodEnd])
+}
+
+model Invoice {
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  periodStart    DateTime
+  periodEnd      DateTime
+  basePrice      Float
+  overageUnits   Int
+  overageAmount  Float
+  totalAmount    Float
+  createdAt      DateTime     @default(now())
+
+  @@unique([organizationId, periodStart, periodEnd])
 }

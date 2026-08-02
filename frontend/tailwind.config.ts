@@ -9,32 +9,45 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#FFFFFF",
-        foreground: "#111827",
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
-          DEFAULT: "#3B82F6",
-          hover: "#2563EB",
+          DEFAULT: "var(--primary)",
+          hover: "var(--primary-hover)",
         },
         secondary: {
-          DEFAULT: "#10B981",
-          hover: "#059669",
+          DEFAULT: "var(--secondary)",
+          hover: "var(--secondary-hover)",
         },
         accent: {
-          DEFAULT: "#F59E0B",
-          hover: "#D97706",
+          DEFAULT: "var(--accent)",
+          hover: "var(--accent-hover)",
         },
         muted: {
-          DEFAULT: "#F3F4F6",
-          hover: "#E5E7EB",
+          DEFAULT: "var(--muted)",
+          hover: "var(--muted-hover)",
         },
-        border: "#E5E7EB",
+        border: "var(--border)",
+        card: "var(--card-bg)",
+      },
+      borderColor: {
+        DEFAULT: "var(--border)",
+        foreground: "var(--border-foreground)",
       },
       fontFamily: {
         sans: ["var(--font-outfit)", "sans-serif"],
       },
       borderRadius: {
-        md: "6px",
-        lg: "8px",
+        DEFAULT: "8px",
+        sm: "6px",
+        md: "12px",
+        lg: "16px",
+        xl: "20px",
+        "2xl": "24px",
+      },
+      borderWidth: {
+        "4": "2px",
+        "2": "1px",
       },
       boxShadow: {
         sm: "none",

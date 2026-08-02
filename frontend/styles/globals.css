@@ -3,16 +3,50 @@
 @tailwind utilities;
 
 @layer base {
+  :root, [data-theme="flat"] {
+    --background: #FFFFFF;
+    --foreground: #111827;
+    --primary: #3B82F6;
+    --primary-hover: #2563EB;
+    --secondary: #10B981;
+    --secondary-hover: #059669;
+    --accent: #F59E0B;
+    --accent-hover: #D97706;
+    --muted: #F3F4F6;
+    --muted-hover: #E5E7EB;
+    --border: #E5E7EB;
+    --border-foreground: #9CA3AF;
+    --card-bg: #FFFFFF;
+  }
+
+  [data-theme="dark"] {
+    --background: #0F172A;
+    --foreground: #F8FAFC;
+    --primary: #60A5FA;
+    --primary-hover: #3B82F6;
+    --secondary: #34D399;
+    --secondary-hover: #10B981;
+    --accent: #FBBF24;
+    --accent-hover: #F59E0B;
+    --muted: #1E293B;
+    --muted-hover: #334155;
+    --border: #334155;
+    --border-foreground: #64748B;
+    --card-bg: #1E293B;
+  }
+
   body {
-    background-color: #FFFFFF;
-    color: #111827;
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-outfit), sans-serif;
     overflow-x: hidden;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
   /* Accessibility focus ring configuration */
   *:focus-visible {
-    outline: 2px solid #3B82F6;
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 }
+

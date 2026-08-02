@@ -14,9 +14,18 @@ export async function apiRequest<T>(endpoint: string, options: RequestOptions = 
     url += `?${searchParams.toString()}`;
   }
 
-  const defaultHeaders = {
+  let apiKey = '';
+  if (typeof window !== 'undefined') {
+    apiKey = window.localStorage.getItem('metermint_api_key') || 'sk_test_free_123';
+  }
+
+  const defaultHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
   };
+
+  if (apiKey) {
+    defaultHeaders['x-api-key'] = apiKey;
+  }
 
   const response = await fetch(url, {
     headers: {
